@@ -7,14 +7,11 @@ using namespace std;
 static uint32_t checkPoint = 100;
 static const uint32_t testCount = 1000000000l;
 
-uint64_t toInt(uint64_t value, bool *ok) noexcept
+uint64_t toInt(uint64_t value, bool& valid) noexcept
 {
-    bool valid = true;
+    valid = true;
     if (value % checkPoint == 0)
         valid = false;
-
-    if (ok)
-        *ok = valid;
 
     if (!valid)
         return value;
@@ -36,9 +33,9 @@ int main()
         cout << "Throw an error every " << checkPoint << " calls" << endl;
         auto startError = chrono::high_resolution_clock::now();
         for (uint64_t test = 0; test < testCount;) {
-            bool ok;
-            test = toInt(test, &ok);
-            if (!ok)
+            bool valid;
+            test = toInt(test, valid);
+            if (!valid)
                 ++test;
         }
         auto stopError = chrono::high_resolution_clock::now();
